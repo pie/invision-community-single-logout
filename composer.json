@@ -1,6 +1,6 @@
 {
-    "name": "pie/plugin_template",
-    "description": "This plugin doesn't do anything, but gives you a very minimal starting template.",
+    "name": "pie/invision_community_single_logout",
+    "description": "This plugin logs a user out from Invision Community when they visit a specified URL, and then logs them out of WordPress. Helpful when using WordPress as an Oauth Server since Invision Community does not allow for a custom logout URL.",
     "type": "wordpress-plugin",
     "license": "GPL",
     "authors": [
