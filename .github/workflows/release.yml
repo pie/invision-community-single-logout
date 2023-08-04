@@ -55,7 +55,7 @@ jobs:
         run: |
           echo "Creating release version ${{ needs.check_for_release.outputs.version }}"
           sed -i "s/version\":\ \"[0-9]\+\.\?[0-9]*\.\?[0-9]*/version\":\ \"${{ needs.check_for_release.outputs.version }}/g" ./package.json
-          sed -i "s/version\":\ \"[0-9]\+\.\?[0-9]*\.\?[0-9]*/version\":\ \"${{ needs.check_for_release.outputs.version }}/g" ./updater.json
+          sed -i "s/version\":\ \"[0-9]\+\.\?[0-9]*\.\?[0-9]*/version\":\ \"${{ needs.check_for_release.outputs.version }}/g" ./update.json
           sed -i "s/Version:\ [0-9]\+\.\?[0-9]*\.\?[0-9]*/Version:\ ${{ needs.check_for_release.outputs.version }}/g" ./plugin.php
           sed -i "s/\[Unreleased\]/\[Unreleased\]\r\n\r\n\[${{ needs.check_for_release.outputs.version }}\] ${{steps.get_date.outputs.date}} /g" ./changelog.md
           git config user.name "Github Actions"
