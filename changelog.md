@@ -6,10 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Functionality to log th user out of IPB on a simple WP logout
+- Functionality to log user out of IPB on a simple WP logout
+- Install artifact
 ### Fixed
 - Bug causing fatal error in de-activation
 - Incorrect require path set
+- Incorrect directory structure for deploy artifact
 
 [0.1.0] 2023-08-04 
 ### Added
