@@ -66,9 +66,12 @@ jobs:
           git push
       
       - name: Build a zip of the plugin
-        run: |   
-          zip -r -q ~/invision-community-single-logout.zip ./ -x ".git/*" ".github/*" "composer.*" "package.json" "update.json" "DOCKER_ENV" "docker_tag" "*.log"
-
+        run: |
+          mkdir -p ~/update/invision-community-single-logout
+          cp -r ./ ~/update/invision-community-single-logout
+          zip -r -q ~/update.zip ~/update -x ".git" ".github" "composer.*" "package.json" "update.json" "DOCKER_ENV" "docker_tag" "*.log"
+          zip -r -q ~/install.zip ./ -x ".git" ".github/*" "composer.*" "package.json" "update.json" "DOCKER_ENV" "docker_tag" "*.log"
+          
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
         with:
@@ -76,4 +79,4 @@ jobs:
           name: ${{ needs.check_for_release.outputs.version }}
           body: ${{ needs.check_for_release.outputs.release_body }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          artifacts: "~/invision-community-single-logout.zip"
+          artifacts: "~/install.zip,~/update.zip" 
