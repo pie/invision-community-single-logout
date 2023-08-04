@@ -39,9 +39,12 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   
     steps:
-      - name: Check out the repo
+      - name: Check out the repo and build it
         uses: actions/checkout@v3
-      
+        uses: php-actions/composer@v6
+        with:
+          dev: no
+  
       - name: Get current date
         id: get_date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
@@ -50,17 +53,26 @@ jobs:
         run: |
           echo "Creating release version ${{ needs.check_for_release.outputs.version }}"
           sed -i "s/version\":\ \"[0-9]\+\.\?[0-9]*\.\?[0-9]*/version\":\ \"${{ needs.check_for_release.outputs.version }}/g" ./package.json
+          sed -i "s/version\":\ \"[0-9]\+\.\?[0-9]*\.\?[0-9]*/version\":\ \"${{ needs.check_for_release.outputs.version }}/g" ./updater.json
           sed -i "s/Version:\ [0-9]\+\.\?[0-9]*\.\?[0-9]*/Version:\ ${{ needs.check_for_release.outputs.version }}/g" ./plugin.php
-          sed -i "s/\[Unreleased\]/\[${{ needs.check_for_release.outputs.version }}\] ${{steps.get_date.outputs.date}} /g" ./changelog.md
+          sed -i "s/\[Unreleased\]/\[Unreleased\]\r\n\r\n\[${{ needs.check_for_release.outputs.version }}\] ${{steps.get_date.outputs.date}} /g" ./changelog.md
           git config user.name "Github Actions"
           git config user.email "<>"
           git add .
           git commit -am "Version Numbering"
           git push
       
+      - name: Build a zip of the plugin
+        run: |
+          rm -fR .github
+          rm -f .gitignore composer.* package.json update.json       
+          zip -r -q ./invision-community-single-logout.zip ./
+
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ needs.check_for_release.outputs.version }}
           name: ${{ needs.check_for_release.outputs.version }}
           body: ${{ needs.check_for_release.outputs.release_body }}
+          artifacts: |
+            ./invision-community-single-logout.zip
