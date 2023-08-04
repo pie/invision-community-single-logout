@@ -39,8 +39,10 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   
     steps:
-      - name: Check out the repo and build it
+      - name: Check out the repo
         uses: actions/checkout@v3
+      
+      - name: Install Composer dependencies
         uses: php-actions/composer@v6
         with:
           dev: no
