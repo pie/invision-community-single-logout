@@ -78,4 +78,4 @@ jobs:
           body: ${{ needs.check_for_release.outputs.release_body }}
           token: ${{ secrets.GITHUB_TOKEN }}
           artifacts: |
-            ./invision-community-single-logout.zip
+            ./update.json
