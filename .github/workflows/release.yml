@@ -41,6 +41,7 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
+        path: ./repo
       
       - name: Install Composer dependencies
         uses: php-actions/composer@v6
@@ -65,10 +66,8 @@ jobs:
           git push
       
       - name: Build a zip of the plugin
-        run: |
-          rm -fR .github
-          rm -f .gitignore composer.* package.json update.json       
-          zip -r -q ~/invision-community-single-logout.zip ./
+        run: |   
+          zip -r -q ~/invision-community-single-logout.zip ./ -x ".git/*" ".github/*" "composer.*" "package.json" "update.json" "DOCKER_ENV" "docker_tag" "*.log"
 
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
