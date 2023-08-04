@@ -69,7 +69,7 @@ jobs:
         run: |
           zip -r -q ~/invision-community-single-logout.zip ./ -x ".git/*" ".github/*" "composer.*" "package.json" "update.json" "DOCKER_ENV" "docker_tag" "*.log"
           mkdir -p ./update/invision-community-single-logout
-          unzip ~/install.zip -d ./update/invision-community-single-logout
+          unzip ~/invision-community-single-logout.zip -d ./update/invision-community-single-logout
           zip -r -q ~/update.zip ./update
           
       - name: Create a GitHub release
@@ -79,4 +79,4 @@ jobs:
           name: ${{ needs.check_for_release.outputs.version }}
           body: ${{ needs.check_for_release.outputs.release_body }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          artifacts: "~/install.zip,~/update.zip" 
+          artifacts: "~/invision-community-single-logout.zip,~/update.zip" 
