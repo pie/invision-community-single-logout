@@ -9,10 +9,25 @@ Author URI: https://pie.co.de
 
 namespace PIE\InvisionCommunitySingleLogout;
 
+/**
+ * Load Composer autoloader
+ */
+require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
+
+use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
+
+$update_checker = PucFactory::buildUpdateChecker(
+    'https://pie.github.io/invision-community-single-logout/update.json',
+    __FILE__,
+    'invision-community-single-logout'
+);
+
 register_activation_hook(__FILE__, __NAMESPACE__ . '\activation');
-register_deactivation_hook(__FILE__, __NAMESPACE__ . '\unistall_my_plugin');
+register_deactivation_hook(__FILE__, __NAMESPACE__ . '\deactivation');
 add_action('init', __NAMESPACE__ . '\add_endpoint', 10);
 add_action('template_redirect', __NAMESPACE__ . '\maybe_log_the_user_out_from_ipb', 11);
+
+add_action('clear_auth_cookie', __NAMESPACE__ . '\clear_ipb_auth_cookie');
 
 /**
  * Adds our endpoint and then flushes the rewrite rules to make sure that it sticks
@@ -53,20 +68,21 @@ function add_endpoint(): void
  */
 function maybe_log_the_user_out_from_ipb(): void
 {
+    clear_ipb_auth_cookie();
     if ('logout' === get_query_var('icsl')) {
-        setcookie('ips4_member_id', 0, 0, '/community/');
-        setcookie('ips4_loggedIn', 0, 0, '/community/');
         header("Location: " . html_entity_decode(wp_logout_url("/")));
         exit;
     }
 }
 
 /**
- * Load Composer autoloader
+ * Clears the Invision Community cookies, hooked into the clear_auth_cookie action so that it is called
+ * when a user logs out of WordPress
+ * 
+ * @hooked clear_auth_cookie
+ * @return void
  */
-require get_template_directory() . '/vendor/autoload.php';
-$update_checker = Puc_v4_Factory::buildUpdateChecker(
-    'https://pie.github.io/invision-community-single-logout/update.json',
-    __FILE__,
-    'invision-community-single-logout'
-);
+function clear_ipb_auth_cookie(): void {
+    setcookie('ips4_member_id', 0, 0, '/community/');
+    setcookie('ips4_loggedIn', 0, 0, '/community/');
+}
