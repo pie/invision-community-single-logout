@@ -1,6 +1,6 @@
 {
   "name": "invision_community_single_logout",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "This plugin logs a user out from Invision Community when they visit a specified URL, and then logs them out of WordPress. Helpful when using WordPress as an Oauth Server since Invision Community does not allow for a custom logout URL.",
   "main": "plugin.php",
   "repository": "git@github.com:pie/invision-community-single-logout.git",
