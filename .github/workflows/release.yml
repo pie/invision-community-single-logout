@@ -68,7 +68,7 @@ jobs:
         run: |
           rm -fR .github
           rm -f .gitignore composer.* package.json update.json       
-          zip -r -q ./invision-community-single-logout.zip ./
+          zip -r -q ~/invision-community-single-logout.zip ./
 
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
@@ -77,5 +77,4 @@ jobs:
           name: ${{ needs.check_for_release.outputs.version }}
           body: ${{ needs.check_for_release.outputs.release_body }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          artifacts: |
-            ./update.json
+          artifacts: "~/invision-community-single-logout.zip"
