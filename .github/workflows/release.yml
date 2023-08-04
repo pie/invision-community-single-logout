@@ -68,8 +68,9 @@ jobs:
       - name: Build a zip of the plugin
         run: |
           zip -r -q ~/install.zip ./ -x ".git/*" ".github/*" "composer.*" "package.json" "update.json" "DOCKER_ENV" "docker_tag" "*.log"
-          mkdir ./invision-community-single-logout
-          sudo mv ./* ./invision-community-single-logout
+          mkdir ~/invision-community-single-logout
+          cp -R ./* ~/invision-community-single-logout
+          mv ~/invision-community-single-logout ./
           zip -r -q ~/update.zip ./ -x ".git/*" ".github/*" "composer.*" "package.json" "update.json" "DOCKER_ENV" "docker_tag" "*.log"
 
       - name: Create a GitHub release
