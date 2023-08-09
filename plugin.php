@@ -22,11 +22,17 @@ $update_checker = PucFactory::buildUpdateChecker(
     'invision-community-single-logout'
 );
 
+/**
+ * The path to the Invision Community installation
+ * 
+ * @todo factor out the hard coded 'community' option
+ */
+const COMMUNITY_PATH = 'community';
+
 register_activation_hook(__FILE__, __NAMESPACE__ . '\activation');
 register_deactivation_hook(__FILE__, __NAMESPACE__ . '\deactivation');
 add_action('init', __NAMESPACE__ . '\add_endpoint', 10);
 add_action('template_redirect', __NAMESPACE__ . '\maybe_log_the_user_out_from_ipb', 11);
-
 add_action('clear_auth_cookie', __NAMESPACE__ . '\clear_ipb_auth_cookie');
 
 /**
@@ -37,6 +43,7 @@ add_action('clear_auth_cookie', __NAMESPACE__ . '\clear_ipb_auth_cookie');
 function activation(): void
 {
     add_endpoint();
+    add_rewrite_rule('^' . COMMUNITY_PATH .'/logout/?', 'index.php?icsl=logout', 'top');
     flush_rewrite_rules();
 }
 
@@ -77,12 +84,12 @@ function maybe_log_the_user_out_from_ipb(): void
 
 /**
  * Clears the Invision Community cookies, hooked into the clear_auth_cookie action so that it is called
- * when a user logs out of WordPress
+ * automatically when a user logs out of WordPress
  * 
  * @hooked clear_auth_cookie
  * @return void
  */
 function clear_ipb_auth_cookie(): void {
-    setcookie('ips4_member_id', 0, 0, '/community/');
-    setcookie('ips4_loggedIn', 0, 0, '/community/');
+    setcookie('ips4_member_id', 0, 0, '/' . COMMUNITY_PATH .'/');
+    setcookie('ips4_loggedIn', 0, 0, '/' . COMMUNITY_PATH .'/');
 }
