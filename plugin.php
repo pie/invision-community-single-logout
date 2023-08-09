@@ -29,6 +29,11 @@ $update_checker = PucFactory::buildUpdateChecker(
  */
 const COMMUNITY_PATH = 'community';
 
+/**
+ * The plugin slug
+ */
+// const PLUGIN_SLUG = sanitize_key(__NAMESPACE__);
+
 register_activation_hook(__FILE__, __NAMESPACE__ . '\activation');
 register_deactivation_hook(__FILE__, __NAMESPACE__ . '\deactivation');
 add_action('init', __NAMESPACE__ . '\add_endpoint', 10);
@@ -43,7 +48,7 @@ add_action('clear_auth_cookie', __NAMESPACE__ . '\clear_ipb_auth_cookie');
 function activation(): void
 {
     add_endpoint();
-    add_rewrite_rule('^' . COMMUNITY_PATH .'/logout/?', 'index.php?icsl=logout', 'top');
+    add_rewrite_rule('^' . COMMUNITY_PATH .'/logout/?', 'index.php?' . sanitize_key(__NAMESPACE__) . '=logout', 'top');
     flush_rewrite_rules();
 }
 
@@ -62,7 +67,7 @@ function deactivation(): void
  */
 function add_endpoint(): void
 {
-    add_rewrite_endpoint('icsl', EP_ROOT );
+    add_rewrite_endpoint(sanitize_key(__NAMESPACE__), EP_ROOT );
 }
 
 
@@ -76,7 +81,7 @@ function add_endpoint(): void
 function maybe_log_the_user_out_from_ipb(): void
 {
     clear_ipb_auth_cookie();
-    if ('logout' === get_query_var('icsl')) {
+    if ('logout' === get_query_var(sanitize_key(__NAMESPACE__))) {
         header("Location: " . html_entity_decode(wp_logout_url("/")));
         exit;
     }
