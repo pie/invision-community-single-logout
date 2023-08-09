@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rewrite rule to catch /community/logout so that .htaccess entry no longer required
 ### Changed
 - Factored community path into a constant
+- Factored internal identifier to use sanitised namespace
 
 ## [0.3.1] 2023-08-04 
 ### Fixed
