@@ -41,25 +41,28 @@ add_action('template_redirect', __NAMESPACE__ . '\maybe_log_the_user_out_from_ip
 add_action('clear_auth_cookie', __NAMESPACE__ . '\clear_ipb_auth_cookie');
 
 /**
- * Adds our endpoint and then flushes the rewrite rules to make sure that it sticks
+ * Adds our endpoint and then flushes the rewrite rules to make sure that it sticks. Adds a redirect to htaccess
+ * to bounce users from the Invision Community logout URL to our endpoint
  *
+ * @todo figure out why we can't do this with 'add_rewrite_rule' instead of htaccess
  * @hooked plugin activation
  */
 function activation(): void
 {
     add_endpoint();
-    add_rewrite_rule('^' . COMMUNITY_PATH .'/logout/?', 'index.php?' . sanitize_key(__NAMESPACE__) . '=logout', 'top');
     flush_rewrite_rules();
+    insert_with_markers( get_home_path() . '.htaccess', __NAMESPACE__, ['Redirect 301 /' . COMMUNITY_PATH . '/logout/ /' . sanitize_key(__NAMESPACE__) . '/logout/']);
 }
 
 /**
- * Flushes the rewrite rules without our endpoint  to clean up after ourselves
+ * Flushes the rewrite rules without our endpoint and removes our htaccess Redirect rule to clean up after ourselves
  *
  * @hooked plugin deactivation
  */
 function deactivation(): void
-{
+{    
     flush_rewrite_rules();
+    insert_with_markers( get_home_path() . '.htaccess', __NAMESPACE__, []);
 }
 
 /**
@@ -75,7 +78,6 @@ function add_endpoint(): void
  * If we are at /icsl/logout then set the Invision Community cookies to 0, forcing a logout, then
  * redirect the user to the WP Logout URL and then on to the home page
  *
- * @todo factor out the hard coded 'community' option
  * @return void
  */
 function maybe_log_the_user_out_from_ipb(): void
