@@ -68,9 +68,6 @@ jobs:
       - name: Build a zip of the plugin
         run: |
           zip -r -q ~/invision-community-single-logout.zip ./ -x ".git/*" ".github/*" "composer.*" "package.json" "update.json" "DOCKER_ENV" "docker_tag" "*.log"
-          mkdir -p ./update/invision-community-single-logout
-          unzip ~/invision-community-single-logout.zip -d ./update/invision-community-single-logout
-          zip -r -q ~/update.zip ./update
           
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
